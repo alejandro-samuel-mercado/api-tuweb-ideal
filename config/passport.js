@@ -19,40 +19,44 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
   }
 }));
 
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/callback"
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      let user = await prisma.user.findUnique({ where: { googleId: profile.id } });
-      
-      if (!user) {
-        const existingUser = await prisma.user.findUnique({ where: { email: profile.emails[0].value } });
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/api/auth/google/callback"
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await prisma.user.findUnique({ where: { googleId: profile.id } });
         
-        if (existingUser) {
-          user = await prisma.user.update({
-            where: { id: existingUser.id },
-            data: { googleId: profile.id }
-          });
-        } else {
-          user = await prisma.user.create({
-            data: {
-              googleId: profile.id,
-              email: profile.emails[0].value,
-              name: profile.displayName,
-              role: 'CLIENT'
-            }
-          });
+        if (!user) {
+          const existingUser = await prisma.user.findUnique({ where: { email: profile.emails[0].value } });
+          
+          if (existingUser) {
+            user = await prisma.user.update({
+              where: { id: existingUser.id },
+              data: { googleId: profile.id }
+            });
+          } else {
+            user = await prisma.user.create({
+              data: {
+                googleId: profile.id,
+                email: profile.emails[0].value,
+                name: profile.displayName,
+                role: 'CLIENT'
+              }
+            });
+          }
         }
+        return done(null, user);
+      } catch (err) {
+        return done(err);
       }
-      return done(null, user);
-    } catch (err) {
-      return done(err);
     }
-  }
-));
+  ));
+} else {
+  console.warn("Google Client ID or Secret missing. Google Auth disabled.");
+}
 
 passport.serializeUser((user, done) => {
   done(null, user.id);

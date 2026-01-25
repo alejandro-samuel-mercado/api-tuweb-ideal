@@ -16,8 +16,9 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
-    res.redirect(`${process.env.CLIENT_URL}/dashboard`)
-  
+  (req, res) => {
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+  }
 );
 
 module.exports = router;
