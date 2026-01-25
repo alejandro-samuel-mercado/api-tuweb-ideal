@@ -22,16 +22,13 @@ const PORT = process.env.PORT || 3001;
 
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL || "http://localhost:3000",
-      process.env.ADMIN_URL || "http://localhost:4200",
-      "http://127.0.0.1:3000",
-      "http://127.0.0.1:4200",
-    ],
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "x-app-type"],
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
