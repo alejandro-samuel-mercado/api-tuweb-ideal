@@ -24,26 +24,29 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
-].filter(Boolean);
+].filter(Boolean).map(url => url.replace(/\/$/, ""));
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-app-type"
-    );
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
-    );
-  }
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(o => origin.startsWith(o)) ) { 
+        return callback(null, true);
+      } else {
+        const isAllowed = allowedOrigins.includes(origin);
+        if(isAllowed) return callback(null, true);
+        
+        return callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "x-app-type"]
+  })
+);
 
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
-});
+app.options('*', cors());
+
 
 
 app.use(express.json());
@@ -106,6 +109,11 @@ app.get("/", (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
+
