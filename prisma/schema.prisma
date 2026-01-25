@@ -7,33 +7,33 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   password  String?
   name      String?
-  googleId  String?  @unique
-  role      Role     @default(CLIENT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-  orders    Order[]
+  googleId  String?   @unique
+  role      Role      @default(CLIENT)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
   messages  Message[]
+  orders    Order[]
 }
 
 model Order {
   id              Int         @id @default(autoincrement())
   userId          Int
-  user            User        @relation(fields: [userId], references: [id])
   plan            String
   status          OrderStatus @default(PENDING)
   requirements    Json?
-  referenceImages Json?       
   timeline        Json?
-  deliveryDate    DateTime?
-  price           Float       @default(0)
-  discountCode    String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  deliveryDate    DateTime?
+  discountCode    String?
+  price           Float       @default(0)
+  referenceImages Json?
   messages        Message[]
+  user            User        @relation(fields: [userId], references: [id])
   project         Project?
 }
 
@@ -48,87 +48,74 @@ model DiscountCode {
 model Message {
   id        Int      @id @default(autoincrement())
   content   String
-  imageUrl  String?
   senderId  Int
-  sender    User     @relation(fields: [senderId], references: [id])
   orderId   Int
-  order     Order    @relation(fields: [orderId], references: [id])
   createdAt DateTime @default(now())
   read      Boolean  @default(false)
+  imageUrl  String?
+  order     Order    @relation(fields: [orderId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
 }
 
 model Project {
   id               Int      @id @default(autoincrement())
   orderId          Int      @unique
-  order            Order    @relation(fields: [orderId], references: [id])
-  name             String?
   url              String?
   adminPanelUrl    String?
-  adminUsername    String?
-  adminPassword    String?
   documentationUrl String?
   description      String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-}
-
-enum Role {
-  CLIENT
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  ACCEPTED
-  PAYMENT_PENDING
-  IN_PROGRESS
-  FINISHED
+  adminPassword    String?
+  adminUsername    String?
+  name             String?
+  order            Order    @relation(fields: [orderId], references: [id])
 }
 
 model Plan {
-  id                  Int      @id @default(autoincrement())
-  name                String
-  slug                String   @unique
-  tagline             String?
-  tagline_en          String?
-  description         String
-  description_en      String?
-  detailedDescription String?
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  slug                   String   @unique
+  tagline                String?
+  description            String
+  detailedDescription    String?
+  price                  Float
+  features               Json
+  whatYouGet             Json?
+  useCases               Json?
+  management             Json?
+  considerations         Json?
+  recommendations        Json?
+  demos                  Json?
+  popular                Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  description_en         String?
   detailedDescription_en String?
-  price               Float
-  features            Json    
-  whatYouGet          Json?    
-  useCases            Json?    
-  management          Json?   
-  considerations      Json?    
-  recommendations     Json?    
-  demos               Json?    
-  popular             Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  tagline_en             String?
 }
 
 model ExampleProject {
-  id                  Int      @id @default(autoincrement())
-  title               String
-  slug                String   @unique
-  tagline             String?
-  tagline_en          String?
-  description         String
-  description_en      String?
-  detailedDescription String?
+  id                     Int      @id @default(autoincrement())
+  title                  String
+  slug                   String   @unique
+  tagline                String?
+  description            String
+  detailedDescription    String?
+  imageUrl               String
+  category               String
+  url                    String?
+  features               Json?
+  technologies           Json?
+  client                 String?
+  completionDate         String?
+  testimonial            Json?
+  gallery                Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  description_en         String?
   detailedDescription_en String?
-  imageUrl            String
-  category            String
-  url                 String?
-  features            Json?    
-  technologies        Json?    
-  client              String?
-  completionDate      String?
-  testimonial         Json?    
-  gallery             Json?   
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  tagline_en             String?
 }
 
 model Review {
@@ -147,9 +134,22 @@ model PersonalData {
   address   String?
   city      String?
   country   String?
-  instagram String?
+  updatedAt DateTime @default(now()) @updatedAt
   facebook  String?
+  instagram String?
   linkedin  String?
   twitter   String?
-  updatedAt DateTime @updatedAt @default(now())
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  PAYMENT_PENDING
+  IN_PROGRESS
+  FINISHED
 }
