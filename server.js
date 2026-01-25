@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
-
 const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
@@ -20,20 +19,27 @@ const emailRoutes = require("./routes/emailRoutes");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(
-  cors({
-    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "x-app-type"],
-  })
-);
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.ADMIN_URL,
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-app-type"],
+}));
+
+app.options("*", (req, res) => {
+  res.sendStatus(200);
+});
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
-
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || "secretcode",
   resave: false,
@@ -41,7 +47,7 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000, 
   },
 };
 
@@ -56,13 +62,16 @@ const adminSession = session({
 });
 
 app.use((req, res, next) => {
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+
   const appType = req.headers["x-app-type"];
   const origin = req.headers.origin || req.headers.referer || "";
 
   const isAdmin =
     appType === "admin" ||
     origin.includes("localhost:4200") ||
-    origin.includes("127.0.0.1:4200");
+    origin.includes("127.0.0.1:4200") ||
+    origin.includes("admin.tuweb-ideal.unixxtech.online");
 
   if (isAdmin) {
     return adminSession(req, res, next);
@@ -72,6 +81,7 @@ app.use((req, res, next) => {
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
@@ -84,6 +94,7 @@ app.use("/api/email", emailRoutes);
 app.get("/", (req, res) => {
   res.send("TuWebIdeal Backend Running");
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
