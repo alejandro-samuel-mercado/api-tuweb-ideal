@@ -195,6 +195,22 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        user: { select: { name: true, email: true } },
+        project: { select: { name: true } }
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json({ orders });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error al obtener pedidos" });
+  }
+};
+
 exports.getOrderById = async (req, res) => {
   const { id } = req.params;
   const parsedId = parseInt(id);
