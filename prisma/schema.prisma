@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String?
+  name      String?
+  googleId  String?  @unique
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+  orders    Order[]
+  messages  Message[]
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  user            User        @relation(fields: [userId], references: [id])
+  plan            String
+  status          OrderStatus @default(PENDING)
+  requirements    Json?
+  referenceImages Json?       
+  timeline        Json?
+  deliveryDate    DateTime?
+  price           Float       @default(0)
+  discountCode    String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  messages        Message[]
+  project         Project?
+}
+
+model DiscountCode {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  percentage Float
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  imageUrl  String?
+  senderId  Int
+  sender    User     @relation(fields: [senderId], references: [id])
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
+
+model Project {
+  id               Int      @id @default(autoincrement())
+  orderId          Int      @unique
+  order            Order    @relation(fields: [orderId], references: [id])
+  name             String?
+  url              String?
+  adminPanelUrl    String?
+  adminUsername    String?
+  adminPassword    String?
+  documentationUrl String?
+  description      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  PAYMENT_PENDING
+  IN_PROGRESS
+  FINISHED
+}
+
+model Plan {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  slug                String   @unique
+  tagline             String?
+  tagline_en          String?
+  description         String
+  description_en      String?
+  detailedDescription String?
+  detailedDescription_en String?
+  price               Float
+  features            Json    
+  whatYouGet          Json?    
+  useCases            Json?    
+  management          Json?   
+  considerations      Json?    
+  recommendations     Json?    
+  demos               Json?    
+  popular             Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model ExampleProject {
+  id                  Int      @id @default(autoincrement())
+  title               String
+  slug                String   @unique
+  tagline             String?
+  tagline_en          String?
+  description         String
+  description_en      String?
+  detailedDescription String?
+  detailedDescription_en String?
+  imageUrl            String
+  category            String
+  url                 String?
+  features            Json?    
+  technologies        Json?    
+  client              String?
+  completionDate      String?
+  testimonial         Json?    
+  gallery             Json?   
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  name      String
+  rating    Int
+  comment   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model PersonalData {
+  id        Int      @id @default(autoincrement())
+  email     String
+  phone     String?
+  address   String?
+  city      String?
+  country   String?
+  instagram String?
+  facebook  String?
+  linkedin  String?
+  twitter   String?
+  updatedAt DateTime @updatedAt @default(now())
+}
