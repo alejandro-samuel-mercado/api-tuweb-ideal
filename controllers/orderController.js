@@ -40,7 +40,7 @@ exports.createOrder = async (req, res) => {
     const referenceImages = [];
     if (req.files && req.files.length > 0) {
       req.files.forEach((file) => {
-        referenceImages.push(`/uploads/chat/${file.filename}`);
+referenceImages.push(file.path);
       });
     }
 
@@ -125,7 +125,7 @@ exports.addMessage = async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;
   const senderId = req.user.id;
-  const imageUrl = req.file ? `/uploads/chat/${req.file.filename}` : null;
+const imageUrl = req.file ? req.file.path : null;
 
   try {
     const order = await prisma.order.findUnique({
