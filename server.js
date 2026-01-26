@@ -53,16 +53,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
-
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || "secretcode",
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: true,
-    sameSite:"lax",
-    domain:".tuweb-ideal.unixxtech.online",
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: "none", 
+    domain: ".tuweb-ideal.unixxtech.online", 
     maxAge: 24 * 60 * 60 * 1000,
   },
 };
