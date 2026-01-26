@@ -20,18 +20,21 @@ const emailRoutes = require("./routes/emailRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
-].filter(Boolean).map(url => url.replace(/\/$/, ""));
+].filter(Boolean);
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); 
-      if (allowedOrigins.some(o => origin.startsWith(o))) return callback(null, true);
-      return callback(new Error("Not allowed by CORS"));
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -45,7 +48,9 @@ app.use(
     ],
   })
 );
-app.options(/.*/, cors());
+
+app.options(/.*/, cors({ credentials: true }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
