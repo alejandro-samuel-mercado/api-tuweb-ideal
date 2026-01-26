@@ -19,6 +19,7 @@ const settingsRoutes = require("./routes/settingsRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
   process.env.CLIENT_URL,
@@ -86,12 +87,15 @@ const adminSession = session({ ...sessionConfig, name: "admin.sid" });
 app.use((req, res, next) => {
   const appType = req.headers["x-app-type"];
   const origin = req.headers.origin || "";
+  const adminUrl = (process.env.ADMIN_URL || "").replace(/\/$/, "");
 
   const isAdmin =
     appType === "admin" ||
     origin.includes("localhost:4200") ||
     origin.includes("127.0.0.1:4200") ||
-    origin.includes(process.env.ADMIN_URL);
+    (adminUrl && origin.includes(adminUrl));
+  
+  console.log("Middleware Debug:", { origin, adminUrl, isAdmin, appType });
 
   if (isAdmin) return adminSession(req, res, next);
   return clientSession(req, res, next);
