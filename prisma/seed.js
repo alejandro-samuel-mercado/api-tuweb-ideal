@@ -5,8 +5,13 @@ const bcrypt = require("bcryptjs");
 async function main() {
   console.log("Starting seed...");
 
-  const adminEmail = "alesamu.am@gmail.com";
-  const adminPassword = "181021Aa";
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPassword) {
+    throw new Error("Admin email or password is not defined in .env");
+  }
+
   const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
   const admin = await prisma.user.upsert({
@@ -475,8 +480,6 @@ async function main() {
     });
   }
 
-  console.log("Example projects restored.");
-  console.log("Seed completed successfully.");
 }
 
 main()
