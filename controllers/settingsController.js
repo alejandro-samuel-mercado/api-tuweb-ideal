@@ -21,18 +21,18 @@ exports.getPersonalData = async (req, res) => {
 };
 
 exports.updatePersonalData = async (req, res) => {
-  const { email, phone, address, city, country } = req.body;
+  const { email, phone, address, city, country, facebook, instagram, linkedin, twitter } = req.body;
   try {
     const first = await prisma.personalData.findFirst();
     let data;
     if (first) {
       data = await prisma.personalData.update({
         where: { id: first.id },
-        data: { email, phone, address, city, country },
+        data: { email, phone, address, city, country, facebook, instagram, linkedin, twitter },
       });
     } else {
       data = await prisma.personalData.create({
-        data: { email, phone, address, city, country },
+        data: { email, phone, address, city, country, facebook, instagram, linkedin, twitter },
       });
     }
     res.json(data);
