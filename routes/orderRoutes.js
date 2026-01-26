@@ -7,7 +7,8 @@ const isAuthenticated = (req, res, next) => {
   res.status(401).json({ message: "No autenticado" });
 };
 
-const upload = require("../middleware/upload");
+const upload= require("../middleware/uploadChatImage");
+
 
 router.use(isAuthenticated);
 
