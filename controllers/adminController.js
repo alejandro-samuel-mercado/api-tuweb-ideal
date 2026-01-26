@@ -247,6 +247,10 @@ exports.getOrderById = async (req, res) => {
       return res.status(404).json({ message: "Pedido no encontrado" });
     }
 
+    if (!order.user) {
+        order.user = { name: 'Usuario Eliminado', email: 'N/A', id: 0 };
+    }
+
     res.json({ order });
   } catch (err) {
     console.error(err);
