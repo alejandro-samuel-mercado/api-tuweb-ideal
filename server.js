@@ -1,8 +1,9 @@
-
 const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
+const { Pool } = require("pg");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 
@@ -20,7 +21,6 @@ const emailRoutes = require("./routes/emailRoutes");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
@@ -29,52 +29,54 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(o => origin.startsWith(o)) ) { 
-        return callback(null, true);
-      } else {
-        const isAllowed = allowedOrigins.includes(origin);
-        if(isAllowed) return callback(null, true);
-        
-        return callback(new Error('Not allowed by CORS'));
-      }
+      if (!origin) return callback(null, true); 
+      if (allowedOrigins.some(o => origin.startsWith(o))) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "x-app-type"]
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "x-app-type",
+    ],
   })
 );
-
 app.options(/.*/, cors());
-
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, 
+});
+
 const sessionConfig = {
+  store: new pgSession({
+    pool,
+    tableName: "user_sessions",
+    createTableIfMissing: true,
+  }),
   secret: process.env.SESSION_SECRET || "secretcode",
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", 
-    sameSite: "none", 
-    domain: ".tuweb-ideal.unixxtech.online", 
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    domain: process.env.NODE_ENV === "production" ? ".tuweb-ideal.unixxtech.online" : undefined,
     maxAge: 24 * 60 * 60 * 1000,
   },
 };
 
-const clientSession = session({
-  ...sessionConfig,
-  name: "client.sid",
-});
-
-const adminSession = session({
-  ...sessionConfig,
-  name: "admin.sid",
-});
+const clientSession = session({ ...sessionConfig, name: "client.sid" });
+const adminSession = session({ ...sessionConfig, name: "admin.sid" });
 
 app.use((req, res, next) => {
   const appType = req.headers["x-app-type"];
@@ -86,16 +88,12 @@ app.use((req, res, next) => {
     origin.includes("127.0.0.1:4200") ||
     origin.includes(process.env.ADMIN_URL);
 
-  if (isAdmin) {
-    return adminSession(req, res, next);
-  }
+  if (isAdmin) return adminSession(req, res, next);
   return clientSession(req, res, next);
 });
 
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
@@ -109,7 +107,6 @@ app.get("/", (req, res) => {
   res.send("TuWebIdeal Backend Running");
 });
 
-
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
@@ -117,4 +114,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-
