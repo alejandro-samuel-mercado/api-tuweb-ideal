@@ -61,6 +61,8 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite:"lax",
+    domain:".tuweb-ideal.unixxtech.online",
     maxAge: 24 * 60 * 60 * 1000,
   },
 };
@@ -83,7 +85,7 @@ app.use((req, res, next) => {
     appType === "admin" ||
     origin.includes("localhost:4200") ||
     origin.includes("127.0.0.1:4200") ||
-    origin.includes("admin.tuweb-ideal.unixxtech.online");
+    origin.includes(process.env.ADMIN_URL);
 
   if (isAdmin) {
     return adminSession(req, res, next);
