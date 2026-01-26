@@ -60,7 +60,7 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite:"lax",
     domain:".tuweb-ideal.unixxtech.online",
     maxAge: 24 * 60 * 60 * 1000,
