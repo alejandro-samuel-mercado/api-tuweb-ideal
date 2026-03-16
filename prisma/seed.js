@@ -2,6 +2,7 @@ require("dotenv").config();
 const prisma = require("../config/prisma");
 const bcrypt = require("bcryptjs");
 
+
 async function main() {
   console.log("Starting seed...");
 
