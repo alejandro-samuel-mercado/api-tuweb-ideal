@@ -15,6 +15,9 @@ router.delete("/users/:id", adminController.deleteUser);
 router.get("/orders", adminController.getAllOrders);
 router.get("/orders/:id", adminController.getOrderById);
 router.put("/orders/:id", adminController.updateOrder);
+router.put("/orders/:id/status", adminController.updateOrder);
+router.put("/orders/:id/timeline", adminController.updateOrder);
+router.put("/orders/:id/delivery-date", adminController.updateOrder);
 router.delete("/orders/:id", adminController.deleteOrder);
 
 router.put("/projects/:orderId", adminController.updateProject);

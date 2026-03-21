@@ -263,15 +263,19 @@ exports.updateOrder = async (req, res) => {
   const parsedId = parseInt(id);
   if (isNaN(parsedId)) return res.status(400).json({ message: "Invalid ID" });
 
-  const { status, timeline, deliveryDate } = req.body;
+  const { status, timeline, deliveryDate, price, plan, requirements, discountCode } = req.body;
 
   try {
     const order = await prisma.order.update({
       where: { id: parsedId },
       data: {
-        status,
-        timeline,
-        ...(deliveryDate && { deliveryDate: new Date(deliveryDate) }),
+        ...(status !== undefined && { status }),
+        ...(timeline !== undefined && { timeline }),
+        ...(deliveryDate !== undefined && { deliveryDate: new Date(deliveryDate) }),
+        ...(price !== undefined && { price: parseFloat(price) }),
+        ...(plan !== undefined && { plan }),
+        ...(requirements !== undefined && { requirements }),
+        ...(discountCode !== undefined && { discountCode })
       },
     });
     res.json({ order });

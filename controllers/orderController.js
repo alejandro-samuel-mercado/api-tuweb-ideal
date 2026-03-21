@@ -1,11 +1,6 @@
 const prisma = require("../config/prisma");
 
-const PLAN_PRICES = {
-  basico: 299,
-  negocio: 599,
-  profesional: 1299,
-  empresarial: 2999,
-};
+
 
 exports.createOrder = async (req, res) => {
   const plan = req.body.plan;
@@ -23,7 +18,12 @@ exports.createOrder = async (req, res) => {
   }
 
   try {
-    let finalPrice = PLAN_PRICES[plan] || 0;
+    const planDb = await prisma.plan.findUnique({ where: { slug: plan } });
+    if (!planDb) {
+      return res.status(404).json({ message: "Plan no encontrado en la base de datos" });
+    }
+
+    let finalPrice = planDb.price || 0;
     let appliedCode = null;
 
     if (discountCode) {
