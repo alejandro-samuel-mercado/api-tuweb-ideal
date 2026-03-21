@@ -197,13 +197,23 @@ exports.deleteUser = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await prisma.order.findMany({
+    let orders = await prisma.order.findMany({
       include: {
         user: { select: { name: true, email: true } },
         project: { select: { name: true } }
       },
       orderBy: { createdAt: "desc" },
     });
+
+    // Populate prices dynamically for older orders that have 0
+    const plansDb = await prisma.plan.findMany({ select: { slug: true, price: true } });
+    const planPriceMap = plansDb.reduce((acc, p) => ({ ...acc, [p.slug]: p.price }), {});
+    
+    orders = orders.map(order => ({
+      ...order,
+      price: order.price === 0 ? (planPriceMap[order.plan] || 0) : order.price
+    }));
+
     res.json({ orders });
   } catch (err) {
     console.error(err);
@@ -249,6 +259,15 @@ exports.getOrderById = async (req, res) => {
 
     if (!order.user) {
         order.user = { name: 'Usuario Eliminado', email: 'N/A', id: 0 };
+    }
+
+    if (order.price === 0) {
+      const planDb = await prisma.plan.findUnique({ where: { slug: order.plan } });
+      if (planDb) {
+        order.price = planDb.price;
+        // Optionally update it in the DB silently to fix the data explicitly
+        await prisma.order.update({ where: { id: parsedId }, data: { price: planDb.price }});
+      }
     }
 
     res.json({ order });
