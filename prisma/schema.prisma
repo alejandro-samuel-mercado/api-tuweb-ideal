@@ -80,6 +80,9 @@ model Plan {
   description            String
   detailedDescription    String?
   price                  Float
+  setupPrice             Float    @default(0)
+  monthlyPrice           Float    @default(0)
+  price_detail           String?
   features               Json
   whatYouGet             Json?
   useCases               Json?
@@ -94,6 +97,7 @@ model Plan {
   detailedDescription_en String?
   tagline_en             String?
 }
+
 
 model ExampleProject {
   id                     Int      @id @default(autoincrement())

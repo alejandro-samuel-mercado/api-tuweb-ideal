@@ -1,0 +1,153 @@
+[
+  {
+    "id": 1,
+    "name": "Semilla Digital",
+    "slug": "semilla-digital",
+    "tagline": "Tu primer paso profesional en internet",
+    "description": "Una Landing Page (página única) ultra-accesible diseñada para captar clientes por WhatsApp sin complicaciones.",
+    "detailedDescription": "Ideal para micro-emprendedores que necesitan una tarjeta de presentación digital funcional con mapa y contacto directo.",
+    "setupPrice": 15,
+    "monthlyPrice": 10,
+    "price_detail": "Activación única + Abono mensual de mantenimiento",
+    "features": [
+      "Página única de aterrizaje (Landing Page)",
+      "Botón directo de contacto a WhatsApp",
+      "Integración de ubicación con Google Maps",
+      "Muestra de horarios y galería de fotos básica",
+      "Diseño adaptado a Celulares (Responsive)",
+      "Certificado de seguridad SSL incluido",
+      "Identidad mediante Subdominio",
+      "Posicionamiento inicial por nombre en Google",
+      "Alojamiento Web y Mantenimiento mensual incluido",
+      "Garantía técnica permanente mientras dure el abono"
+    ],
+    "whatYouGet": [
+      { "title": "Landing Page Móvil", "description": "Tu sitio optimizado para el dispositivo que más usan tus clientes." },
+      { "title": "Conexión WhatsApp", "description": "Recibe consultas directamente en tu chat personal." }
+    ],
+    "useCases": ["Microemprendimientos", "Servicios a domicilio", "Landing pages rápidas"],
+    "popular": false
+  },
+  {
+    "id": 2,
+    "name": "Presencia Digital",
+    "slug": "presencia-digital",
+    "tagline": "Profesionaliza tu marca y automatiza consultas",
+    "description": "Sitio web multi-página enfocado en la conversión y presencia institucional con herramientas de automatización básica.",
+    "detailedDescription": "Ideal para profesionales independientes, veterinarias o portfolios que necesitan informar y captar clientes rápidamente.",
+    "setupPrice": 35,
+    "monthlyPrice": 15,
+    "price_detail": "Activación única + Abono mensual de mantenimiento",
+    "features": [
+      "Todo lo incluido en el Plan Semilla",
+      "Hasta 3 páginas o secciones informativas",
+      "Chatbot de atención automática (Nivel Básico)",
+      "Formulario de contacto estándar",
+      "Integración total con enlaces a Redes Sociales",
+      "SEO Básico de indexación técnica",
+      "1 Usuario administrador para cambios simples",
+      "Hosting y SSL de alta velocidad incluidos mensualmente",
+      "Soporte y Garantía técnica permanente"
+    ],
+    "whatYouGet": [
+      { "title": "Chatbot Básico", "description": "Responde preguntas frecuentes automáticamente 24/7." },
+      { "title": "SEO de Inicio", "description": "Indexación para que te encuentren por tu nombre en Google." }
+    ],
+    "useCases": ["Veterinarias", "Abogados", "Artistas", "Servicios técnicos"],
+    "popular": false
+  },
+  {
+    "id": 3,
+    "name": "Comercio Local",
+    "slug": "comercio-local",
+    "tagline": "Digitaliza tu stock y vende por WhatsApp",
+    "description": "Sistema diseñado para tiendas físicas que quieren mostrar sus productos y recibir pedidos organizados en su celular.",
+    "detailedDescription": "Incluye catálogo de productos gestionable y herramientas de SEO local para dominar las búsquedas en Jujuy.",
+    "setupPrice": 70,
+    "monthlyPrice": 25,
+    "price_detail": "Activación única + Abono mensual de mantenimiento",
+    "features": [
+      "Todo lo incluido en el Plan Presencia",
+      "Hasta 6 páginas o secciones personalizadas",
+      "Catálogo gestionable hasta 50 productos",
+      "Sistema de pedidos directo a WhatsApp",
+      "2 GB de almacenamiento en la nube para fotos",
+      "Mapa interactivo de ubicación",
+      "Botón flotante permanente de Redes Sociales",
+      "Nombre de Dominio propio incluido (.com / .ar)",
+      "Configuración de SEO Local Jujuy",
+      "2 Usuarios administradores",
+      "Backup semanal de datos e inventario"
+    ],
+    "whatYouGet": [
+      { "title": "Dominio Propio", "description": "Tu marca con nombre propio en internet (ej. tunegocio.com.ar)." },
+      { "title": "Venta por WhatsApp", "description": "Recibe carritos de compras armados directo a tu chat." }
+    ],
+    "useCases": ["Tiendas de ropa", "Regalerías", "Gastronómicos locales", "Repuestos"],
+    "popular": true
+  },
+  {
+    "id": 4,
+    "name": "E-Commerce Pro",
+    "slug": "ecommerce-pro",
+    "tagline": "Tu tienda online automatizada y escalable",
+    "description": "Plataforma completa de venta online con cobros automáticos, gestión de stock y panel de control avanzado.",
+    "detailedDescription": "Tienda profesional con sistema de usuarios, pagos con tarjeta y administración total de inventario y variantes.",
+    "setupPrice": 120,
+    "monthlyPrice": 50,
+    "price_detail": "Activación única + Abono mensual de mantenimiento",
+    "features": [
+      "Todo lo incluido en el Plan Comercio",
+      "Hasta 12 páginas o secciones funcionales",
+      "Venta de productos y categorías ilimitadas",
+      "Cobros online (Mercado Pago, Tarjetas y Transferencias)",
+      "Sistema de clientes con Inicio de sesión y Favoritos",
+      "Panel de administración Super E-commerce completo",
+      "Gestión de variantes de producto (Talle, Color, SKU)",
+      "15 GB de almacenamiento para fotos y videos",
+      "Formulario avanzado con base de datos de clientes",
+      "SEO Técnico avanzado y optimización de contenido",
+      "Hasta 5 Usuarios administradores",
+      "Servidor Dedicado de alta velocidad incluido",
+      "Soporte técnico prioritario y auditoría de seguridad"
+    ],
+    "whatYouGet": [
+      { "title": "Pagos Automáticos", "description": "Vende 24/7 con Mercado Pago integrado sin intervención manual." },
+      { "title": "Portal de Clientes", "description": "Historial de pedidos y gestión de facturas para tus usuarios." }
+    ],
+    "useCases": ["Tiendas nacionales", "Distribuidoras", "Marcas regionales", "SaaS"],
+    "popular": false
+  },
+  {
+    "id": 5,
+    "name": "Corporativo Premium",
+    "slug": "corporativo-premium",
+    "tagline": "Gestión empresarial y multisucursal total",
+    "description": "La solución definitiva que integra tu local físico y tu tienda online con sistema POS y gestión multisucursal.",
+    "detailedDescription": "Incluye Punto de Venta (POS) para mostrador, gestión de inventario sincronizado, multimoneda y API personalizada.",
+    "setupPrice": 250,
+    "monthlyPrice": 95,
+    "price_detail": "Activación única + Abono mensual de mantenimiento",
+    "features": [
+      "Todo lo incluido en el Plan E-Commerce",
+      "Punto de Venta (POS) profesional para local físico",
+      "Gestión de inventario Multisucursal sincronizado",
+      "Transferencias de stock y alertas de stock bajo",
+      "Sistema Multimoneda con cambio automático (20+ monedas)",
+      "Páginas y secciones internas ilimitadas",
+      "Desarrollo de API personalizada para integraciones",
+      "Panel de control de alta complejidad a medida",
+      "100 GB de almacenamiento masivo en la nube",
+      "Usuarios administradores ilimitados con roles",
+      "Estrategia de SEO Avanzada (Nivel Nacional)",
+      "Servidor Dedicado de máxima potencia (Infraestructura VIP)",
+      "Consultoría técnica y funcional permanente"
+    ],
+    "whatYouGet": [
+      { "title": "POS e Inventario", "description": "Usa el sistema en tu mostrador físico y sincroniza con la web." },
+      { "title": "Control Multisucursal", "description": "Gestiona todos tus depósitos y sucursales desde un solo panel." }
+    ],
+    "useCases": ["Cadenas de locales", "Mayoristas", "Marketplaces regionales", "Empresas con múltiples depósitos"],
+    "popular": false
+  }
+]
