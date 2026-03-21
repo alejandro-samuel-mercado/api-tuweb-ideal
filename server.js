@@ -22,32 +22,33 @@ const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.ADMIN_URL,
+    process.env.CLIENT_URL,
+    process.env.ADMIN_URL,
+    "http://localhost:3000/"
 ].filter(Boolean);
 
 app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
+    cors({
+        origin: function (origin, callback) {
+            if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
 
-      callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Origin",
-      "X-Requested-With",
-      "Content-Type",
-      "Accept",
-      "Authorization",
-      "x-app-type",
-    ],
-  })
+            callback(new Error("Not allowed by CORS"));
+        },
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: [
+            "Origin",
+            "X-Requested-With",
+            "Content-Type",
+            "Accept",
+            "Authorization",
+            "x-app-type",
+        ],
+    })
 );
 
 app.options(/.*/, cors({ credentials: true }));
@@ -59,46 +60,46 @@ app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, 
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
 });
 
 const sessionConfig = {
-  store: new pgSession({
-    pool,
-    tableName: "user_sessions",
-    createTableIfMissing: true,
-  }),
-  secret: process.env.SESSION_SECRET || "secretcode",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production", 
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    domain: process.env.NODE_ENV === "production" ? ".tuweb-ideal.unixxtech.online" : undefined,
-    maxAge: 24 * 60 * 60 * 1000,
-  },
+    store: new pgSession({
+        pool,
+        tableName: "user_sessions",
+        createTableIfMissing: true,
+    }),
+    secret: process.env.SESSION_SECRET || "secretcode",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        domain: process.env.NODE_ENV === "production" ? ".tuweb-ideal.unixxtech.online" : undefined,
+        maxAge: 24 * 60 * 60 * 1000,
+    },
 };
 
 const clientSession = session({ ...sessionConfig, name: "client.sid" });
 const adminSession = session({ ...sessionConfig, name: "admin.sid" });
 
 app.use((req, res, next) => {
-  const appType = req.headers["x-app-type"];
-  const origin = req.headers.origin || "";
-  const adminUrl = (process.env.ADMIN_URL || "").replace(/\/$/, "");
+    const appType = req.headers["x-app-type"];
+    const origin = req.headers.origin || "";
+    const adminUrl = (process.env.ADMIN_URL || "").replace(/\/$/, "");
 
-  const isAdmin =
-    appType === "admin" ||
-    origin.includes("localhost:4200") ||
-    origin.includes("127.0.0.1:4200") ||
-    (adminUrl && origin.includes(adminUrl));
-  
-  console.log("Middleware Debug:", { origin, adminUrl, isAdmin, appType });
+    const isAdmin =
+        appType === "admin" ||
+        origin.includes("localhost:4200") ||
+        origin.includes("127.0.0.1:4200") ||
+        (adminUrl && origin.includes(adminUrl));
 
-  if (isAdmin) return adminSession(req, res, next);
-  return clientSession(req, res, next);
+    console.log("Middleware Debug:", { origin, adminUrl, isAdmin, appType });
+
+    if (isAdmin) return adminSession(req, res, next);
+    return clientSession(req, res, next);
 });
 
 app.use(passport.initialize());
@@ -113,13 +114,13 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/email", emailRoutes);
 
 app.get("/", (req, res) => {
-  res.send("TuWebIdeal Backend Running");
+    res.send("TuWebIdeal Backend Running");
 });
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 }
 
 module.exports = app;
