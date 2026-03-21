@@ -24,7 +24,8 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.ADMIN_URL,
-    "http://localhost:3000/"
+    "http://localhost:3000",
+    "http://localhost:4200"
 ].filter(Boolean);
 
 app.use(
