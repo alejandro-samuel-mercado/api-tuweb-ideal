@@ -96,6 +96,7 @@ model Plan {
   description_en         String?
   detailedDescription_en String?
   tagline_en             String?
+  projects               ExampleProject[]
 }
 
 
@@ -120,6 +121,8 @@ model ExampleProject {
   description_en         String?
   detailedDescription_en String?
   tagline_en             String?
+  planId                 Int?
+  plan                   Plan?    @relation(fields: [planId], references: [id], onDelete: SetNull)
 }
 
 model Review {

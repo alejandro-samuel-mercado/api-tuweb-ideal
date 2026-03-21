@@ -4,6 +4,7 @@ exports.getPlans = async (req, res) => {
   try {
     const plans = await prisma.plan.findMany({
       orderBy: { price: "asc" },
+      include: { projects: true }
     });
     res.json(plans);
   } catch (error) {
@@ -156,6 +157,7 @@ exports.createExampleProject = async (req, res) => {
     completionDate,
     testimonial,
     gallery,
+    planId,
   } = req.body;
   try {
     const project = await prisma.exampleProject.create({
@@ -177,6 +179,7 @@ exports.createExampleProject = async (req, res) => {
         completionDate,
         testimonial,
         gallery,
+        planId: planId ? parseInt(planId) : null,
       },
     });
     res.status(201).json(project);
@@ -202,6 +205,7 @@ exports.updateExampleProject = async (req, res) => {
     completionDate,
     testimonial,
     gallery,
+    planId,
   } = req.body;
   try {
     const project = await prisma.exampleProject.update({
@@ -224,6 +228,7 @@ exports.updateExampleProject = async (req, res) => {
         completionDate,
         testimonial,
         gallery,
+        planId: planId ? parseInt(planId) : null,
       },
     });
     res.json(project);
