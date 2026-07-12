@@ -91,6 +91,8 @@ model Plan {
   recommendations        Json?
   demos                  Json?
   popular                Boolean  @default(false)
+  deliveryTime           String?
+  deliveryTime_en        String?
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
   description_en         String?

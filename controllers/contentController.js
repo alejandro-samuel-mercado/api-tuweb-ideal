@@ -31,6 +31,8 @@ exports.createPlan = async (req, res) => {
     recommendations,
     demos,
     popular,
+    deliveryTime,
+    deliveryTime_en,
   } = req.body;
   try {
     const plan = await prisma.plan.create({
@@ -55,6 +57,8 @@ exports.createPlan = async (req, res) => {
         recommendations,
         demos,
         popular,
+        deliveryTime,
+        deliveryTime_en: req.body.deliveryTime_en,
       },
     });
     res.status(201).json(plan);
@@ -84,6 +88,8 @@ exports.updatePlan = async (req, res) => {
     recommendations,
     demos,
     popular,
+    deliveryTime,
+    deliveryTime_en,
   } = req.body;
   try {
     const plan = await prisma.plan.update({
@@ -109,6 +115,8 @@ exports.updatePlan = async (req, res) => {
         recommendations,
         demos,
         popular,
+        deliveryTime,
+        deliveryTime_en: req.body.deliveryTime_en,
       },
     });
     res.json(plan);
